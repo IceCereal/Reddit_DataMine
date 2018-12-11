@@ -70,17 +70,18 @@ class Reader:
 
         def typeSelect(data):
             if type == 'high':
-                y.append(self._HighScore(rawData[0][0]))
+                return self._HighScore(data)
             if type == 'mean':
-                y.append(self._Mean(rawData[0][0]))
+                return self._Mean(data)
             if type == 'sigma':
-                y.append(self._Sigma(rawData[0][0]))
+                return self._Sigma(data)
 
         rawData = self._read()
 
         count = 0.00
 
         X.append(count)
+        y.append(typeSelect(rawData[0][1]))
         count += 1
 
         for i in range(1, len(rawData)):
@@ -99,6 +100,6 @@ class Reader:
                 X.append(count * 0.25)
                 count += 1
 
-                typeSelect(rawData[i][1])
+                y.append(typeSelect(rawData[i][1]))
 
         return (X, y)
