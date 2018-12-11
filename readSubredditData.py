@@ -35,6 +35,15 @@ class Reader:
 
         return globalList
 
+    def _HighScore(self, data):
+        return max(data)
+
+    def _Mean(self, data):
+        return (sum(data)/len(data))
+
+    def _Sigma(self, data):
+        return sum(data)
+
     def getData(self, type = None):
         """
         type:
