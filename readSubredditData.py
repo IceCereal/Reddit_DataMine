@@ -93,8 +93,16 @@ class Reader:
             if (timeDiffMins >= 16):
                 missingDataNumber = (timeDiffMins / 15) + 1
 
+                dataLower = rawData[i-1][1]
+                dataHigher = rawData[i][1]
+
+                dataMissing = typeSelect(dataLower) + typeSelect(dataHigher)
+                dataMissing = dataMissing/2
+
                 for i in range(1, timeDiffMins + 1):
-                    #regain consciousness
+                    X.append(count * 0.25)
+                    y.append(dataMissing)
+                    count += 1
 
             else:
                 X.append(count * 0.25)
