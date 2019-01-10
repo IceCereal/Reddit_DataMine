@@ -5,6 +5,7 @@ Example Data:
 $['2018-11-14 21:35:18.257332', [8, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 """
 from ast import literal_eval
+from datetime import datetime
 
 class Reader:
     def __init__(self, fileName : str):
@@ -69,6 +70,7 @@ class Reader:
         y = []
 
         def typeSelect(data):
+            #Internal Function
             if type == 'high':
                 return self._HighScore(data)
             if type == 'mean':
@@ -111,3 +113,10 @@ class Reader:
                 y.append(typeSelect(rawData[i][1]))
 
         return (X, y)
+
+if __name__ == "__main__":
+    print ("Direct Call: readSubredditData")
+
+else:
+    print ("Setup: readSubredditData")
+    print ("Modules: Reader")
