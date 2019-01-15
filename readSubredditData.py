@@ -6,6 +6,7 @@ $['2018-11-14 21:35:18.257332', [8, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 """
 from ast import literal_eval
 from datetime import datetime
+from numpy import array as np_a
 
 class Reader:
     def __init__(self, fileName : str):
@@ -45,12 +46,16 @@ class Reader:
     def _Sigma(self, data):
         return sum(data)
 
-    def getData(self, type = None):
+    def getData(self, type = None, numpyEnabled = None):
         """
         type:
             'high'  :   returns the highest score in the list (DEFAULT)
             'mean'  :   returns the mean of the values in the list
             'sigma' :   returns the sum of all the values of the list
+
+        numpyEnabled:
+            'No'    :   returns normal tuple (DEFAULT)
+            'Yes'   :   returns a numpy array compatible with scikit-learn
 
         Module returns a tuple:
             ([time_1, time_2, ..., time_n], [num_1, num_2, ..., num_n])
@@ -62,6 +67,12 @@ class Reader:
 
         if (type == None):
             type = 'high'
+        
+        if numpyEnabled == None:
+            numpyEnabled = 'No'
+        
+        if (numpyEnabled not in ['No', 'Yes']):
+            return -1
 
         if (type not in ['high', 'mean', 'sigma']):
             return -1
@@ -111,6 +122,10 @@ class Reader:
                 count += 1
 
                 y.append(typeSelect(rawData[i][1]))
+
+        if numpyEnabled == 'Yes':
+            X = np_a(X).reshape(-1, 1)
+            y = np_a(y).reshape(-1, 1)
 
         return (X, y)
 
