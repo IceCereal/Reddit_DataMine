@@ -9,14 +9,24 @@ from datetime import datetime
 from numpy import array as np_a
 
 class Reader:
-	def __init__(self, fileName : str):
+	def __init__(self, fileName : str, relPath = None):
+		"""
+			fileName	: 	Subreddit (essentially)
+			relPath		: 	In Case the caller is not in accessibility of SubredditData/
+							Note: The arg has to lead to SubredditData {Ex: Reader(SubredditName, "../DIRNAME/SubredditData")}
+		"""
+
 		self.fileName = fileName
+		
+		if relPath == None:
+			relPath = "SubredditData/"
+		self.relPath = relPath
 
 	def _read(self):
 		#Private Function to read file and return the actual list
 
-		with open("../SubredditData/"+self.fileName) as Fobj:
-			buffer = Fobj.read()    #File Data
+		with open(self.relPath + self.fileName, 'r') as Fobj:
+			buffer = Fobj.read() #File Data
 
 			globalList = [] #Final List
 
@@ -49,13 +59,13 @@ class Reader:
 	def getData(self, type = None, numpyEnabled = None):
 		"""
 		type:
-			'high'  :   returns the highest score in the list (DEFAULT)
-			'mean'  :   returns the mean of the values in the list
-			'sigma' :   returns the sum of all the values of the list
+			'high'	:	returns the highest score in the list (DEFAULT)
+			'mean'	:	returns the mean of the values in the list
+			'sigma'	:	returns the sum of all the values of the list
 
 		numpyEnabled:
-			'No'    :   returns normal tuple (DEFAULT)
-			'Yes'   :   returns a numpy array compatible with scikit-learn
+			False	:	returns normal tuple (DEFAULT)
+			True	:	returns a numpy array compatible with scikit-learn
 
 		Module returns a tuple:
 			([time_1, time_2, ..., time_n], [num_1, num_2, ..., num_n])
@@ -64,14 +74,14 @@ class Reader:
 				num_i : int
 					[int, int, int, ..., int]
 		"""
-
+		
 		if (type == None):
 			type = 'high'
 		
 		if numpyEnabled == None:
-			numpyEnabled = 'No'
-		
-		if (numpyEnabled not in ['No', 'Yes']):
+			numpyEnabled = False
+
+		if (numpyEnabled not in [True, False]):
 			return -1
 
 		if (type not in ['high', 'mean', 'sigma']):
@@ -123,7 +133,7 @@ class Reader:
 
 				y.append(typeSelect(rawData[i][1]))
 
-		if numpyEnabled == 'Yes':
+		if numpyEnabled == True:
 			X = np_a(X).reshape(-1, 1)
 			y = np_a(y).reshape(-1, 1)
 
@@ -144,10 +154,10 @@ if __name__ == "__main__":
 	print ("Numpy Enabled:\t", sys.argv[3])
 
 	print ("\nStart readSubredditData")
-	Subreddit = Reader(sys.argv[1])
-	(X, y) = Subreddit.getData(type = sys.argv[2], numpyEnabled = sys.argv[3])
-
-	print (X, "\n\n", y)
+	Subreddit = Reader(fileName = sys.argv[1], relPath = "../SubredditData/")
+	(X, y) = Subreddit.getData(type = sys.argv[2], numpyEnabled = bool(sys.argv[3]))
+	
+	print (X, y)
 
 else:
 	print ("Setup: readSubredditData")
